@@ -1,0 +1,90 @@
+*{
+	margin: 0;
+	padding: 0;
+	border: 0;
+	outline: 0;
+	vertical-align: inherit;
+	font-size: inherit;
+	line-height: inherit;
+	font-weight: inherit;
+	font-style: inherit;
+	font-family: inherit;
+	text-align: inherit;
+	text-decoration: inherit;
+	color: inherit;
+	background-color: transparent;
+}
+*:focus{
+	outline: none;
+}
+html, body{
+	height: 100%;
+	width: 100%;
+}
+
+body{
+	background-color: #000;
+	vertical-align: top;
+	font-size: 10px;
+	line-height: 16px;
+	font-weight: 400;
+	font-style: normal;
+	font-family: monaco, monospace;
+	text-align: left;
+	text-decoration: none;
+	color: #ccc;
+}
+#controls{
+	background-color: rgba(255,255,255,0.2);
+	color: #9f0;
+	position: absolute;
+	z-index: 100;
+	padding-top: 32px;
+	width: 192px;
+}
+#controls_toggle{
+	display: block;
+	position: absolute;
+	z-index: 200;
+	width: 192px;
+	padding: 2px;
+	border: 1px solid #f90;
+	text-align: center;
+}
+input[type="button"]{
+	cursor: pointer;
+	padding: 2px;
+	border: 1px solid #f90;
+}
+
+.control{
+	margin: 2px 2px;
+	border: 1px solid #f90;
+}
+
+.point{
+	position: absolute;
+	margin: -8px 0 0 -8px;
+	height: 15px;
+	width: 15px;
+	cursor: pointer;
+	z-index: 101;
+	background-image: url('img/point.png');
+	background-position: 0px 0px;
+}
+.point:hover{
+}
+.point span{
+	display: none;
+	position: absolute;
+	background-color: rgba(255,255,255,0.2);
+	padding: 0 6px;
+	margin: 0px;
+	top: -32px;
+	left: 7px;
+	z-index: 100;
+	border-radius: 4px 4px 4px 0;
+}
+.point:hover span{
+	display: block;
+}
