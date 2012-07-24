@@ -92,7 +92,7 @@ NPos2d.Scene = function(args){
 	t.frameRate = args.frameRate || 30;
 	t.pixelScale = args.pixelScale || 1;
 	t.globalCompositeOperation = args.globalCompositeOperation || 'source-over';
-
+	t.backgroundColor = args.backgroundColor || 'transparent';
 	var isMobile = (/iphone|ipad|ipod|android|blackberry|mini|windows\sce|palm/i.test(navigator.userAgent.toLowerCase()));
 	if(isMobile){
 		t.checkWindow = function(){
@@ -134,7 +134,11 @@ NPos2d.Scene = function(args){
 
 	t.mouseHandler = function(e){
 		//console.dir(e);
-		e.preventDefault();
+		if(e.target instanceof HTMLInputElement){
+			//Repairs all input element interaction?
+		}else{
+			e.preventDefault();
+		}
 		if((e.type === 'touchstart' || e.type === 'touchmove') && e.touches && e.touches.length){
 			//t.mpos.x = e.touches[0].screenX - t.cx;
 			//t.mpos.y = e.touches[0].screenY - t.cy;
@@ -150,9 +154,13 @@ NPos2d.Scene = function(args){
 	}
 	t.clickHandler = function(e){
 		//console.log(e);
-		e.preventDefault();
+		if(e.target instanceof HTMLInputElement){
+			//Repairs all input element interaction?
+		}else{
+			e.preventDefault();
+		}
 		if(e.type === 'mousedown'){
-			t.mpos.down = true;
+				t.mpos.down = true;
 		}else{
 			t.mpos.down = false;
 			t.mpos.hitting = undefined; //in case I want to store the object it's hitting, I clear that on release.
@@ -168,33 +176,8 @@ NPos2d.Scene = function(args){
 
 	t.rQ = [];//RenderQueue
 	t.cro = 0;//CurrentlyRenderingObject
-	t.update = function(){
-		t.checkWindow();
-		if(t.w !== t.lw || t.h !== t.lh){t.resize();}
-
-		if(t.debug){
-			var newSize = subset(window,'innerHeight,innerWidth,outerWidth,outerHeight');
-			newSize.bodyHeight = document.body.style.height;
-			clearDebug();
-			displayDebug(newSize);
-		}
-
-		t.c.clearRect(0,0,t.w,t.h);
-		t.c.save();
-		//c.strokeStyle = '#fff';
-		t.c.translate(t.cx,t.cy);
-		t.c.globalCompositeOperation = t.globalCompositeOperation;
-		t.rQ.sort(t.sortByObjectZDepth);
-
-		for(t.cro = 0; t.cro < t.rQ.length; t.cro += 1){
-			t.rQ[t.cro].update(t);
-		}
-
-		t.c.restore();
-	}
-
-	t.interval = setInterval(t.update,1000/t.frameRate);
 	
+	t.start();
 	t.globalize();
 	return this;
 }
@@ -244,6 +227,43 @@ NPos2d.Scene.prototype={
 		//window.scrollTo(0,0);
 		//displayDebug(oldSize);
 		//displayDebug(document.body.style);
+	},
+	update:function(){
+		var t = this;
+		t.checkWindow();
+		if(t.w !== t.lw || t.h !== t.lh){t.resize();}
+
+		if(t.debug){
+			var newSize = subset(window,'innerHeight,innerWidth,outerWidth,outerHeight');
+			newSize.bodyHeight = document.body.style.height;
+			clearDebug();
+			displayDebug(newSize);
+		}
+
+		if(t.backgroundColor === 'transparent'){
+			t.c.clearRect(0,0,t.w,t.h);
+		}else{
+			t.c.fillStyle = t.backgroundColor;
+			t.c.fillRect(0,0,t.w,t.h);
+		}
+		t.c.save();
+		//c.strokeStyle = '#fff';
+		t.c.translate(t.cx,t.cy);
+		t.c.globalCompositeOperation = t.globalCompositeOperation;
+		//t.rQ.sort(t.sortByObjectZDepth);
+
+		for(t.cro = 0; t.cro < t.rQ.length; t.cro += 1){
+			t.rQ[t.cro].update(t);
+		}
+
+		t.c.restore();
+	},
+	start: function () {
+		var t = this;
+		t.interval = setInterval(function () {t.update();}, 1000 / t.frameRate);
+	},
+	stop: function () {
+		clearInterval(this.interval);
 	},
 	sortByObjectZDepth:function(a,b){return a.pos[2] - b.pos[2];},
 //--------------------------------
@@ -514,7 +534,7 @@ NPos2d.Scene.prototype={
 		c.strokeStyle = color || '#0f0';
 		c.lineCap = 'round';
 		c.lineJoin = 'round';
-		c.lineWidth= lineWidth || t.scene.lineWidth || 2;
+		c.lineWidth= lineWidth || t.lineWidth || t.scene.lineWidth || 2;
 		c.arc(pos.x,pos.y, radius, 0, tau, false);
 		if(fill){
 			c.fillStyle= color || '#0f0';

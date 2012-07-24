@@ -40,7 +40,7 @@ body{
 	position: absolute;
 	z-index: 100;
 	padding-top: 32px;
-	width: 192px;
+	width: 320px;
 }
 #controls_toggle{
 	display: block;
@@ -51,6 +51,12 @@ body{
 	border: 1px solid #f90;
 	text-align: center;
 }
+
+input[type="range"]{
+	display: block;
+	width: 100%;
+}
+
 input[type="button"]{
 	cursor: pointer;
 	padding: 2px;
