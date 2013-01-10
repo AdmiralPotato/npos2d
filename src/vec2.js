@@ -62,7 +62,7 @@ Vec2.prototype = {
 	},
 	length:function(){
 		var t = this;
-		return Math.sqrt((t.x*t.x) + (t.y*t.y));
+		return Math.sqrt(t.sqlen());
 	},
 	sqlen:function(){
 		var t = this;
@@ -109,9 +109,6 @@ Vec2.prototype = {
 	},
 	toUrlString:function(){
 		return this.x+this.sep+this.y;
-	},
-	clone:function(){
-		return new Vec2(this);
 	},
 	normalize:function(){
 		this.div(this.length());
